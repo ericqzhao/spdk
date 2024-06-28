@@ -89,7 +89,7 @@ static void bdev_xfbd_io_complete(struct spdk_bdev_io *bdev_io, enum spdk_bdev_i
     }
 }
 
-static void bdev_xfbd_finish_aiocb(void* data, PfMessageStatus comp_status)
+static void bdev_xfbd_finish_aiocb(void* data, int comp_status)
 {
     struct spdk_bdev_io *bdev_io;
     struct bdev_xfbd_io *rbd_io = data;
@@ -97,10 +97,10 @@ static void bdev_xfbd_finish_aiocb(void* data, PfMessageStatus comp_status)
     bdev_io = rbd_io->bdev_io;
     bio_status = SPDK_BDEV_IO_STATUS_SUCCESS;    
     if (bdev_io->type == SPDK_BDEV_IO_TYPE_READ) {
-    	if (comp_status != MSG_STATUS_SUCCESS) {
+    	if (comp_status != 0) {
     	    bio_status = SPDK_BDEV_IO_STATUS_FAILED;
     	}
-    } else if (comp_status != MSG_STATUS_SUCCESS) { /* For others, 0 means success */
+    } else if (comp_status != 0) { /* For others, 0 means success */
     	bio_status = SPDK_BDEV_IO_STATUS_FAILED;
     }    
     bdev_xfbd_io_complete(bdev_io, bio_status);
@@ -317,7 +317,7 @@ int bdev_xfbd_create(struct spdk_bdev **bdev, const char *config_file,
     bdev_xfbd_count++;    
     rbd->disk.write_cache = 0;
     rbd->disk.blocklen = block_size;
-    rbd->disk.blockcnt = (rbd->vol)->volume_size / rbd->disk.blocklen;
+    rbd->disk.blockcnt = pf_get_volume_size(rbd->vol) / rbd->disk.blocklen;
     rbd->disk.ctxt = rbd;
     rbd->disk.fn_table = &bdev_xfbd_fn_table;
     rbd->disk.module = &xf_if;    
