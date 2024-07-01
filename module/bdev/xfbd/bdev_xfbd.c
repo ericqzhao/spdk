@@ -351,3 +351,5 @@ int bdev_xfbd_resize(const char *name, const uint64_t new_size_in_mb)
     SPDK_ERRLOG("xfbd nsupport to resize\n");
     return -ENOTSUP;
 }
+
+SPDK_LOG_REGISTER_COMPONENT(bdev_xfbd)
