@@ -25,7 +25,7 @@ static void free_rpc_create_xfbd(struct rpc_create_xfbd *req)
 static const struct spdk_json_object_decoder rpc_create_xfbd_decoders[] = {
 	{"bd_name", offsetof(struct rpc_create_xfbd, bd_name), spdk_json_decode_string},
 	{"block_size", offsetof(struct rpc_create_xfbd, block_size), spdk_json_decode_uint32},
-	{"config_file", offsetof(struct rpc_create_xfbd, config_file), spdk_json_decode_string, true},
+	{"config_file", offsetof(struct rpc_create_xfbd, config_file), spdk_json_decode_string},
 	{"uuid", offsetof(struct rpc_create_xfbd, uuid), spdk_json_decode_uuid, true}
 };
 
